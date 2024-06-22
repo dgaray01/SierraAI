@@ -1,5 +1,6 @@
 # app.py
 import os
+import logging
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from langchain.document_loaders import TextLoader
@@ -11,13 +12,47 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain.embeddings import HuggingFaceInferenceAPIEmbeddings
 from langchain.llms import HuggingFaceHub
 from langchain.retrievers import BM25Retriever, EnsembleRetriever
+import logging
+
+class Logs:
+    @staticmethod
+    def setup_logging():
+        # Set up the logging configuration
+        logging.basicConfig(
+            level=logging.DEBUG,  # Default logging level
+            format='%(asctime)s - %(levelname)s - %(message)s',  # Log message format
+            datefmt='%Y-%m-%d %H:%M:%S',  # Date format
+            handlers=[
+                logging.StreamHandler()  # Output to console
+            ]
+        )
+
+    @staticmethod
+    def error(message):
+        # Log an error message
+        logging.error(message)
+
+    @staticmethod
+    def send(message):
+        # Log an informational message
+        logging.info(message)
+
+# Set up the logging system
+Logs.setup_logging()
+
 
 app = Flask(__name__)
+
+Logs.send("Starting API server...")
 
 # HuggingFace API Token
 
 load_dotenv()
 api_token = os.environ.get('HUGGINGFACEHUB_API_TOKEN')
+secret_real_tokens = os.environ.get('SECRETTOKENS')
+
+if not api_token:
+    raise ValueError('HUGGINGFACEHUB_API_TOKEN is not set in the .env file')
 
 # Paramters
 
@@ -37,7 +72,7 @@ docs = loader.load()
 if not docs:
     raise ValueError("No documents found. Please check the file path and content.")
 
-print("Documents loaded successfully")
+Logs.send("Documents loaded succesfully")
 
 # Split documents into chunks
 splitter = RecursiveCharacterTextSplitter(chunk_size=chunkSize, chunk_overlap=chunkOverlap)
@@ -47,7 +82,7 @@ chunks = splitter.split_documents(docs)
 if not chunks:
     raise ValueError("No chunks created. Please check the splitting logic.")
 
-print("Chunks created successfully")
+Logs.send("Chunks created")
 
 # Get Embedding Model from HF via API
 
@@ -61,7 +96,7 @@ chunk_embeddings = embeddings.embed_documents(chunk_texts)
 if not chunk_embeddings or len(chunk_embeddings) != len(chunk_texts):
     raise ValueError("Embeddings generation failed. Please check the embedding model and input data.")
 
-print("Embeddings generated successfully")
+Logs.send("Embeddings generated successfully")
 
 # Create VectorStore with the selected embedding model
 vectorstore = Chroma.from_documents(chunks, embeddings)
@@ -103,8 +138,19 @@ chain = (
     | output_parser
 )
 
-@app.route("/ask", methods=["POST"])
+SECRET_TOKEN = secret_real_tokens
+
+def validate_token(request):
+    token = request.headers.get('Authorization')
+    if token != f"Bearer {SECRET_TOKEN}":
+        return False
+    return True
+
+@app.route("/api/ask", methods=["POST"])
 def ask():
+    if not validate_token(request):
+        return jsonify({"error": "Forbidden"}), 403
+    
     data = request.json
     question = data.get("question")
     if not question:
@@ -116,5 +162,14 @@ def ask():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/api/status", methods=["GET"])
+def status():
+    if not validate_token(request):
+        return jsonify({"error": "Forbidden"}), 403
+    
+    try:
+        return jsonify({"status": "running"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "details": str(e)}), 500
 if __name__ == "__main__":
     app.run()
