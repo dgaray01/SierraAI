@@ -36,23 +36,23 @@ client.on(Events.InteractionCreate, async interaction => {
 
 	const command = interaction.client.commands.get(interaction.commandName);
 
-	if (!command) {
+	    if (!command) {
         log('warning', `Command ${interaction.commandName} is given but was not found.`)
-		return;
-	}
+        return;
+    }
 
-	try {
+    try {
         log('debug', `Command ${interaction.commandName} has been executed by user ${interaction.user.id}`)
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-        log('error', error)
-		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-		} else {
-			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-		}
-	}
+        await command.execute(interaction);
+    } catch (error) {
+        console.error(error);
+        log('error', `Error executing command: ${error}`)
+        if (interaction.replied || interaction.deferred) {
+            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+        } else {
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
+    }
 });
 
 client.once(Events.ClientReady, readyClient => {

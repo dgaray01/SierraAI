@@ -36,18 +36,8 @@ module.exports = {
     url: "https://github.com/dgaray01/UR-SpiderBot-AI",
     iconURL: interaction.client.user.avatarURL(),
   })
-  .addFields(
-    {
-      name: "Question:",
-      value: "```"+reason+"```",
-      inline: false
-    },
-    {
-      name: "Response",
-      value: "```"+request.data.response+"```",
-      inline: false
-    },
-  )
+  .setTitle(reason)
+  .setDescription(request.data.response)
   .setColor("#00b0f4")
   .setFooter({
     text: "Powered by SpiderBot-AI",
