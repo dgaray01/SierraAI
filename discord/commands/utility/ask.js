@@ -16,6 +16,7 @@ module.exports = {
                 .setRequired(true)),
                 
 	async execute(interaction) {
+        await interaction.deferReply({ ephemeral: false });
         const reason = interaction.options.getString('question');
         const headers = {
             'Authorization': `Bearer ${apiToken}`,
@@ -44,8 +45,8 @@ module.exports = {
     iconURL: "https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png",
   })
   .setTimestamp();
-			
-			await interaction.reply({ embeds: [embed], ephemeral: false });
+
+			await interaction.editReply({ embeds: [embed], ephemeral: false });
 
 		} catch (error) {
 			console.error('Error fetching API status:', error);
@@ -65,7 +66,8 @@ module.exports = {
             })
             .setTimestamp();
 
-			await interaction.reply({ embeds: [embed], ephemeral: true });
+			await interaction.editReply({ embeds: [embed], ephemeral: false });
+            
 		}
 	},
 };
