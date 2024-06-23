@@ -168,7 +168,7 @@ def status():
         return jsonify({"error": "Forbidden"}), 403
     
     try:
-        return jsonify({"status": "running"}), 200
+        return jsonify({"status": "Ok"}), 200
     except Exception as e:
         return jsonify({"status": "error", "details": str(e)}), 500
 if __name__ == "__main__":
