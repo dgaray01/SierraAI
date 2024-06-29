@@ -12,6 +12,33 @@ import logging
 import warnings
 import prompts
 
+class Logs:
+    @staticmethod
+    def setup_logging():
+        # Set up the logging configuration
+        logging.basicConfig(
+            level=logging.DEBUG,  # Default logging level
+            format='%(asctime)s - %(levelname)s - %(message)s',  # Log message format
+            datefmt='%Y-%m-%d %H:%M:%S',  # Date format
+            handlers=[
+                logging.StreamHandler()  # Output to console
+            ]
+        )
+
+    @staticmethod
+    def error(message):
+        # Log an error message
+        logging.error(message)
+
+    @staticmethod
+    def send(message):
+        # Log an informational message
+        logging.info(message)
+
+# Set up the logging system
+Logs.setup_logging()
+
+
 prompt_selection = prompts.prompt_2
 
 # Configure logging
@@ -24,8 +51,14 @@ warnings.filterwarnings("ignore")
 load_dotenv()  # Loads .env file
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))  # Loads API key
+secret_real_tokens = os.environ.get('SECRETTOKENS')
+
+if not secret_real_tokens:
+    raise ValueError('SECRETTOKENS is not set in the .env file')
+
 
 app = Flask(__name__)
+Logs.send("Starting API server...")
 
 ##### Text #####
 folder_path = "txt_docs"
@@ -63,6 +96,14 @@ def get_vector_store(text_chunks):
         logger.info(f"FAISS index saved to {index_dir}")
     except Exception as e:
         logger.error(f"Error creating or saving FAISS index: {e}")
+SECRET_TOKEN = secret_real_tokens
+
+def validate_token(request):
+    token = request.headers.get('Authorization')
+    if token != f"Bearer {SECRET_TOKEN}":
+        return False
+    return True
+
 
 ##### CHAINS ######
 def get_conversational_chain():
@@ -76,8 +117,10 @@ def get_conversational_chain():
 def index():
     return render_template('index.html')
 
-@app.route('/ask', methods=['POST'])
+@app.route('/api/ask', methods=['POST'])
 def ask():
+    if not validate_token(request):
+        return jsonify({"error": "Forbidden"}), 403
     user_question = request.json.get('question', '')
 
     # Create embeddings for the user question using a Google Generative AI model
@@ -110,6 +153,16 @@ def process():
     text_chunks = get_chunks(raw_text)
     get_vector_store(text_chunks)
     return jsonify({"message": "Processing Done!"})
+
+@app.route("/api/status", methods=["GET"])
+def status():
+    if not validate_token(request):
+        return jsonify({"error": "Forbidden"}), 403
+
+    try:
+        return jsonify({"status": "Ok"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "details": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=False)
