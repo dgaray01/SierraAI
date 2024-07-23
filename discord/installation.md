@@ -1,4 +1,3 @@
-Certainly! Here’s a streamlined README focusing only on the installation steps:
 
 ---
 
