@@ -24,8 +24,8 @@ module.exports = {
 			
 			const embed = new EmbedBuilder()
 				.setAuthor({
-					name: "SpiderBot-AI",
-					url: "https://github.com/dgaray01/UR-SpiderBot-AI",
+					name: interaction.client.user.username,
+					url: "https://github.com/dgaray01/SierraAI",
 					iconURL: interaction.client.user.avatarURL(),
 				})
 				.setTitle("Service Status")
@@ -45,8 +45,8 @@ module.exports = {
 			
 			const embed = new EmbedBuilder()
 				.setAuthor({
-					name: "SpiderBot-AI",
-					url: "https://github.com/dgaray01/UR-SpiderBot-AI",
+					name: interaction.client.user.username,
+					url: "https://github.com/dgaray01/SierraAI",
 					iconURL: interaction.client.user.avatarURL(),
 				})
 				.setTitle("Service Status")
