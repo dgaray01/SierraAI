@@ -1,3 +1,4 @@
+
 # SierraAI
 
 SierraAI is an advanced AI client designed to help universities, schools, and companies quickly obtain information through web scraping. Currently, SierraAI operates as a Discord bot and is in development, but can be accessed through HTTP requests. This project is developed by students from the University of Richmond. 
@@ -19,8 +20,6 @@ To start using SierraAI, you can request a free trial. After the trial period, c
 
 ### Installation
 
-1. **Clone the Repository**
+1. **[Discord Bot](https://github.com/dgaray01/SierraAI/blob/main/discord/installation.md)**
 
-   ```bash
-   git clone https://github.com/dgaray01/SierraAI.git
-   cd SierraAI
+
