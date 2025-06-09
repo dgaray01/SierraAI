@@ -22,4 +22,6 @@ To start using SierraAI, you can request a free trial. After the trial period, c
 
 1. **[Discord Bot](https://github.com/dgaray01/SierraAI/blob/main/discord/installation.md)**
 
+### Example Usage (University of Richmond)
+![ezu5QSP-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/f3adea8c-3170-4453-a2de-624d4b21f214)
 
