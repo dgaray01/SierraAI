@@ -1,7 +1,7 @@
 
-# SierraAI
+# SpiderBot
 
-SierraAI is an advanced AI client designed to help universities, schools, and companies quickly obtain information through web scraping. Currently, SierraAI operates as a Discord bot and is in development, but can be accessed through HTTP requests. This project is developed by students from the University of Richmond. 
+SpiderBot is an advanced AI client designed to help universities, schools, and companies quickly obtain information through web scraping. Currently, SpiderBot operates as a Discord bot and is in development, but can be accessed through HTTP requests. This project is developed by students from the University of Richmond. 
 
 ## Features
 
@@ -11,12 +11,12 @@ SierraAI is an advanced AI client designed to help universities, schools, and co
 
 ## Getting Started
 
-To start using SierraAI, you can request a free trial. After the trial period, companies can purchase a license for full implementation.
+To start using SpiderBot, you can request a free trial. After the trial period, companies can purchase a license for full implementation.
 
 ### Prerequisites
 
 - **Node.js**: Ensure you have Node.js installed to run the bot.
-- **Discord.js**: SierraAI uses the Discord.js library for bot functionality.
+- **Discord.js**: SpiderBot uses the Discord.js library for bot functionality.
 
 ### Installation
 
